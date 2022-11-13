@@ -7,7 +7,7 @@ public interface FiboNumbers {
 
     /**
      * Возвращает число Фибоначчи по его номеру
-     * @param numNo номер числа
+     * @param numNo номер числа начиная с 0
      */
-    int getNum(int numNo);
+    long getNum(long numNo);
 }
