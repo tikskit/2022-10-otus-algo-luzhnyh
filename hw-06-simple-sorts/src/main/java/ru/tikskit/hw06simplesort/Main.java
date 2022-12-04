@@ -3,11 +3,14 @@ package ru.tikskit.hw06simplesort;
 public class Main {
     public static void main(String[] args) {
         RandomDataProvider rnd = new RandomDataProvider();
-        int[] data = rnd.getData(1000000);
+        int[] data = rnd.getData(100000);
 
-//        sort(new SortBubble(cloneData(data)));
+        // Сравнивать все алгоритмы будем на одних и тех же рандомных данных, для этого клонируем их сперва
+
+        sort(new SortBubble(cloneData(data)));
         sort(new SortInsert(cloneData(data)));
         sort(new SortInsertBatchMover(cloneData(data)));
+        sort(new SortShell(cloneData(data)));
     }
 
     private static int[] cloneData(int[] src) {
