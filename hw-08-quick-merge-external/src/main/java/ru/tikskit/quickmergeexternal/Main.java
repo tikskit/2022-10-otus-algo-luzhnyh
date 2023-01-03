@@ -10,12 +10,12 @@ import ru.tikskit.quickmergeexternal.utils.Timer;
 public class Main {
     public static void main(String[] args) {
         DataProvider dataProvider = new DataProviderRandom();
-        int[] data = dataProvider.getData(1000_000_000);
+        int[] data = dataProvider.getData(1000);
 
         // Сравнивать все алгоритмы будем на одних и тех же рандомных данных, для этого клонируем их сперва
 
-//        sort(new QuickSort(cloneData(data)));
-//        sort(new MergeSort(cloneData(data)));
+        sort(new QuickSort(cloneData(data)));
+        sort(new MergeSort(cloneData(data)));
         sort(new SortShell(cloneData(data)));
 //        sort(new SortInsert(cloneData(data)));
     }
