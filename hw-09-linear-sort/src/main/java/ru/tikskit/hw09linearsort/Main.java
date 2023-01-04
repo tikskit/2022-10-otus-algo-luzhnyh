@@ -13,6 +13,7 @@ public class Main {
         // Сравнивать все алгоритмы будем на одних и тех же рандомных данных, для этого клонируем их сперва
 
         sort(new BucketSort(cloneData(data)));
+        sort(new CountingSort(cloneData(data)));
     }
 
     private static int[] cloneData(int[] src) {

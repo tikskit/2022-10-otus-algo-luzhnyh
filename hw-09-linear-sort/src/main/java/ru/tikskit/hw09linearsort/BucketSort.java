@@ -23,7 +23,7 @@ public class BucketSort extends AbstractSort implements Sort {
         return res;
     }
 
-    private class Node {
+    private static class Node {
         private final int value;
         private Node next;
 
@@ -63,7 +63,7 @@ public class BucketSort extends AbstractSort implements Sort {
 
     @Override
     public void sort() {
-        if (data.length == 0) {
+        if (data.length <= 1) {
             return;
         }
 

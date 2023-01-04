@@ -1,7 +1,7 @@
 package ru.tikskit.hw09linearsort;
 
 abstract class AbstractSort {
-    protected final int[] data;
+    protected int[] data;
 
     public AbstractSort(int[] data) {
         this.data = data;
