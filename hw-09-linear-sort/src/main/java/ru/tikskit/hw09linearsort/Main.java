@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         RandomFromRangeDataProvider rnd = new RandomFromRangeDataProvider();
-        int[] data = rnd.getData(1000_000);
+        int[] data = rnd.getData(100);
 
         // Сравнивать все алгоритмы будем на одних и тех же рандомных данных, для этого клонируем их сперва
 

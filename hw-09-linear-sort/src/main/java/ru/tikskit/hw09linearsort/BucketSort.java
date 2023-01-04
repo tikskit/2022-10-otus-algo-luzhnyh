@@ -1,12 +1,11 @@
 package ru.tikskit.hw09linearsort;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 /**
  * Ведерная сортировка
  */
 public class BucketSort extends AbstractSort implements Sort {
+
+    private static final int BUCKET_COUNT = 10;
 
 
     public BucketSort(int[] data) {
@@ -24,34 +23,42 @@ public class BucketSort extends AbstractSort implements Sort {
         return res;
     }
 
+    private class Node {
+        private final int value;
+        private Node next;
+
+        public Node(int value) {
+            this.value = value;
+        }
+    }
+
     private int getBucketIndex(int value, int maxValue) {
-        return value * data.length / (maxValue + 1);
+        return value * BUCKET_COUNT / (maxValue + 1);
     }
 
-    private LinkedList<Integer>[] createBuckets(int count) {
-        LinkedList<Integer>[] res = new LinkedList[count];
-        for (int i = 0; i < count; i++) {
-            res[i] = new LinkedList<>();
-        }
-        return res;
-    }
-
-    private void putValueToBucket(LinkedList<Integer> bucket, int value) {
-        int i = 0;
-        // Использование итератора в LinkedList предпочтительнее, чем метод get, поскольку с get придется за каждым
-        // последующим элементом бегать от начала списка
-        Iterator<Integer> iterator = bucket.iterator();
-        while (iterator.hasNext()) {
-            if (iterator.next() > value) {
-                // Для сохранения стабильности сортировки, мы находим первое значение, которое больше вставляемого
-                // и всавляем прямо перед ним
-                bucket.add(i, value);
+    private void putValueToBucket(Node[] buckets, int bucketIndex, int value) {
+        Node cur = buckets[bucketIndex];
+        Node prev = null;
+        Node newNode = new Node(value);
+        while (cur != null) {
+            if (cur.value > value) {
+                if (prev == null) {
+                    buckets[bucketIndex] = newNode;
+                } else {
+                    prev.next = newNode;
+                }
+                newNode.next = cur;
                 return;
+            } else {
+                prev = cur;
+                cur = cur.next;
             }
-            i++;
         }
-
-        bucket.add(value);
+        if (prev == null) {
+            buckets[bucketIndex] = newNode;
+        } else {
+            prev.next = newNode;
+        }
     }
 
     @Override
@@ -61,20 +68,19 @@ public class BucketSort extends AbstractSort implements Sort {
         }
 
         int maxValue = getMaxValue();
-        LinkedList<Integer>[] buckets = createBuckets(data.length);
+        Node[] buckets = new Node[BUCKET_COUNT];
 
         for (int i = 0; i < data.length; i++) {
             int bucketIndex = getBucketIndex(data[i], maxValue);
-            putValueToBucket(buckets[bucketIndex], data[i]);
+            putValueToBucket(buckets, bucketIndex, data[i]);
         }
 
         int resIx = 0;
-        for (int b = 0; b < data.length; b++) {
-            // Использование итератора в LinkedList предпочтительнее, чем метод get, поскольку с get придется за каждым
-            // последующим элементом бегать от начала списка
-            Iterator<Integer> iterator = buckets[b].iterator();
-            while (iterator.hasNext()) {
-                data[resIx++] = iterator.next();
+        for (int b = 0; b < BUCKET_COUNT; b++) {
+            Node cur = buckets[b];
+            while (cur != null) {
+                data[resIx++] = cur.value;
+                cur = cur.next;
             }
         }
     }
