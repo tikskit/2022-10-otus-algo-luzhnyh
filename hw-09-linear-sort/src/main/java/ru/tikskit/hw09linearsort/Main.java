@@ -8,12 +8,14 @@ public class Main {
 
     public static void main(String[] args) {
         RandomFromRangeDataProvider rnd = new RandomFromRangeDataProvider();
-        int[] data = rnd.getData(100);
+        int[] data = rnd.getData(1000_000_000);
 
         // Сравнивать все алгоритмы будем на одних и тех же рандомных данных, для этого клонируем их сперва
 
-        sort(new BucketSort(cloneData(data)));
-        sort(new CountingSort(cloneData(data)));
+//        sort(new BucketSort(cloneData(data)));
+//        sort(new CountingSort(cloneData(data)));
+//        sort(new RadixSort(cloneData(data)));
+        sort(new SortShell(cloneData(data)));
     }
 
     private static int[] cloneData(int[] src) {
