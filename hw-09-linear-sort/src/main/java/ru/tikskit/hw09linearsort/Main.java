@@ -1,16 +1,18 @@
-package ru.tikskit.hw06simplesort;
+package ru.tikskit.hw09linearsort;
+
+import ru.tikskit.hw09linearsort.utils.OrderChecker;
+import ru.tikskit.hw09linearsort.utils.RandomFromRangeDataProvider;
+import ru.tikskit.hw09linearsort.utils.Timer;
 
 public class Main {
+
     public static void main(String[] args) {
-        RandomRangeDataProvider rnd = new RandomRangeDataProvider();
-        int[] data = rnd.getData(100000);
+        RandomFromRangeDataProvider rnd = new RandomFromRangeDataProvider();
+        int[] data = rnd.getData(1000_000);
 
         // Сравнивать все алгоритмы будем на одних и тех же рандомных данных, для этого клонируем их сперва
 
-        sort(new SortBubble(cloneData(data)));
-        sort(new SortInsert(cloneData(data)));
-        sort(new SortInsertBatchMover(cloneData(data)));
-        sort(new SortShell(cloneData(data)));
+        sort(new BucketSort(cloneData(data)));
     }
 
     private static int[] cloneData(int[] src) {
