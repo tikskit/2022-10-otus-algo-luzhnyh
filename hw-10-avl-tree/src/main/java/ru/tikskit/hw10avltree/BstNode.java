@@ -7,17 +7,32 @@ public class BstNode {
     private BstNode right;
 
     public void swap(BstNode node) {
-        BstNode tempParent = parent;
+
         BstNode tempLeft  = left;
         BstNode tempRight = right;
+        BstNode nodeInitParent = node.parent;
 
-        parent = node.parent;
         left = node.left;
         right = node.right;
 
-        node.parent = tempParent;
         node.left = tempLeft;
         node.right = tempRight;
+
+        if (parent == node) {
+            node.parent = this;
+            parent = nodeInitParent;
+            return;
+        } else {
+            node.parent = nodeInitParent;
+        }
+
+        if (node.parent == this) {
+            BstNode thisInitParent = parent;
+            parent = node;
+            node.parent = thisInitParent;
+        } else {
+            parent = node.parent;
+        }
     }
 
 
