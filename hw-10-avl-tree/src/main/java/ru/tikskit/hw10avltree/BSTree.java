@@ -72,9 +72,9 @@ public class BSTree implements TreeSearch{
     private void removeNodeWithNoChild(BstNode node) {
         if (node.getParent() == null) {
             root = null;
-        } else if (node.isLeftChildren()) {
+        } else if (node.isLeftChild()) {
             node.getParent().setLeft(null);
-        } else if (node.isRightChildren()) {
+        } else if (node.isRightChild()) {
             node.getParent().setRight(null);
         }
     }
@@ -84,7 +84,7 @@ public class BSTree implements TreeSearch{
             root = null;
         } else {
             BstNode theOnlyChild = node.getLeft() != null ? node.getLeft() : node.getRight();
-            if (node.isLeftChildren()) {
+            if (node.isLeftChild()) {
                 node.getParent().setLeft(theOnlyChild);
             } else {
                 node.getParent().setRight(theOnlyChild);

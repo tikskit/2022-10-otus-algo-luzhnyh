@@ -1,40 +1,26 @@
 package ru.tikskit.hw10avltree;
 
-public class AvlTree {
+public class AvlTree implements TreeSearch {
 
     public AvlTree() {
     }
 
-    /**
-     * Малый поворот влево
-     * @param node Поворачиваемый узел дерева
-     */
-    private void rotateLeftSmall(AvlNode node) {
+    public void smallLeftRotation() {
 
     }
 
-    /**
-     * Создать дерево из массива данных
-     * @param keys массив данных (ключей)
-     * @return корень дерева
-     */
-    public AvlNode getTree(int[] keys) {
-        if (keys == null || keys.length == 0) {
-            return null;
-        }
-
-        return null;
-    }
-
-    public void insert(int key, AvlNode root) {
+    @Override
+    public void insert(int key) {
 
     }
 
-    public boolean search(int key, AvlNode root) {
+    @Override
+    public boolean search(int key) {
         return false;
     }
 
-    public void remove(int key, AvlNode root) {
+    @Override
+    public void remove(int key) {
 
     }
 }

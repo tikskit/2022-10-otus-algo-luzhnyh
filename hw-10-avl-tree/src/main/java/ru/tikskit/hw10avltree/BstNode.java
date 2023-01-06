@@ -6,6 +6,11 @@ public class BstNode {
     private BstNode left;
     private BstNode right;
 
+    public BstNode(int key, BstNode parent) {
+        this.key = key;
+        this.parent = parent;
+    }
+
     public void swap(BstNode node) {
 
         BstNode tempLeft  = left;
@@ -40,11 +45,6 @@ public class BstNode {
         return parent;
     }
 
-    public BstNode(int key, BstNode parent) {
-        this.key = key;
-        this.parent = parent;
-    }
-
     public int getKey() {
         return key;
     }
@@ -65,11 +65,20 @@ public class BstNode {
         this.right = right;
     }
 
-    public boolean isLeftChildren() {
+    /**
+     * Является ли узел левым дочерним для родителя
+     * @return True если узел является левым дочерним для родителя, иначе false. False также возвращается, если родителя
+     * нет
+     */
+    public boolean isLeftChild() {
         return parent != null && parent.getLeft() == this;
     }
-
-    public boolean isRightChildren() {
+    /**
+     * Является ли узел правым дочерним для родителя
+     * @return True если узел является правым дочерним для родителя, иначе false. False также возвращается, если родителя
+     * нет
+     */
+    public boolean isRightChild() {
         return parent != null && parent.getRight() == this;
     }
 }

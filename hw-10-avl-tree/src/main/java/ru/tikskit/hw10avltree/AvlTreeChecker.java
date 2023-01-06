@@ -1,7 +1,7 @@
 package ru.tikskit.hw10avltree;
 
-public class BstTreeChecker {
-    public static void check(BstNode node) {
+public class AvlTreeChecker {
+    public static void check(AvlNode node) {
         if (node == null) {
             return;
         }
@@ -17,6 +17,10 @@ public class BstTreeChecker {
                 throw new IllegalStateException("Значение элемента справа не больше, чем значение узла");
             }
             check(node.getRight());
+        }
+
+        if (!node.isBalanced()) {
+            throw new IllegalStateException("Узел дерева не сбалансирован");
         }
     }
 }

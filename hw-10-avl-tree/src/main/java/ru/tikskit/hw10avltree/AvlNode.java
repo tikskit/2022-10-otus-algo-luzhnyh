@@ -3,19 +3,21 @@ package ru.tikskit.hw10avltree;
 
 public class AvlNode {
     private final int key;
-
     private AvlNode left;
     private AvlNode right;
 
-    public int getLevel() {
-        return level;
+    public int getHeight() {
+        return 1 + Math.max(
+                left != null ? left.getHeight() : 0,
+                right != null ? right.getHeight() : 0
+        );
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public boolean isBalanced() {
+        int leftH = left != null ? left.getHeight() + 1 : 0;
+        int rightH = right != null ? right.getHeight() + 1 : 0;
+        return Math.abs(leftH - rightH) <= 1;
     }
-
-    private int level;
 
 
     public AvlNode(int key) {
