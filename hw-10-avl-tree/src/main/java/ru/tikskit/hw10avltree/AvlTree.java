@@ -19,7 +19,8 @@ public class AvlTree implements TreeSearch {
     }
 
     private void smallRightRotation(AvlNode node) {
-        AvlNode parent = node.getParent();
+        AvlNode parent = node.getParent(); // родитель есть всегда (из контекста вызовов)
+
         AvlNode nodeRight = node.getRight();
         if (nodeRight != null) {
             nodeRight.setParent(parent);
@@ -27,14 +28,17 @@ public class AvlTree implements TreeSearch {
         parent.setLeft(nodeRight);
         node.setRight(parent);
         node.setParent(parent.getParent());
-        if (parent.getParent() != null) {
+        if (parent.isLeftChild()) {
+            parent.getParent().setLeft(node);
+        } else if (parent.isRightChild()) {
             parent.getParent().setRight(node);
         }
         parent.setParent(node);
     }
 
     private void smallLeftRotation(AvlNode node) {
-        AvlNode parent = node.getParent();
+        AvlNode parent = node.getParent(); // родитель есть всегда (из контекста вызовов)
+
         AvlNode nodeLeft = node.getLeft();
         if (nodeLeft != null) {
             nodeLeft.setParent(parent);
@@ -42,62 +46,58 @@ public class AvlTree implements TreeSearch {
         parent.setRight(nodeLeft);
         node.setLeft(parent);
         node.setParent(parent.getParent());
-        if (parent.getParent() != null) {
+        if (parent.isLeftChild()) {
             parent.getParent().setLeft(node);
+        } else if (parent.isRightChild()) {
+            parent.getParent().setRight(node);
         }
         parent.setParent(node);
     }
 
-    private AvlNode bigRightRotation(AvlNode node) {
-        AvlNode nodeRight = node.getRight();
-        if (nodeRight != null) {
-            smallLeftRotation(nodeRight);
-        }
-        smallRightRotation(nodeRight);
-        return nodeRight;
-    }
-
-    private AvlNode bigLeftRotation(AvlNode node) {
-        AvlNode nodeLeft = node.getLeft();
-        if (nodeLeft != null) {
-            smallRightRotation(nodeLeft);
-        }
-        smallLeftRotation(nodeLeft);
-        return nodeLeft;
-    }
-
-    private AvlNode performNodeBalance(AvlNode node) {
-        int leftHeight = node.getLeft() != null ? node.getLeft().getHeight() : 0;
-        int rightHeight = node.getRight() != null ? node.getRight().getHeight() : 0;
-
-        if (Math.abs(leftHeight - rightHeight) <= 1) {
-            return node;
+    /**
+     * Сбалансировать узел дерева, если он разбалансирован
+     * @param node Балансируемый узел
+     * @return узел, который который занимает место node в результате балансировки
+     */
+    private AvlNode balanceByRotations(AvlNode node) {
+        if (node.isBalanced()) {
+            return node; // Узел сбалансирован
         }
 
-        if (node.getParent() == null) {
-            if (leftHeight > rightHeight + 1) {
-                return performNodeBalance(node.getLeft());
-            } else if (rightHeight > leftHeight + 1) {
-                return performNodeBalance(node.getRight());
-            } else {
-                return node;
-            }
-        }
+        int leftHeight = node.getLeftHeight();
+        int rightHeight = node.getRightHeight();
 
-        AvlNode newTopNode = node;
-        if (node.isLeftChild()) {
+
+        AvlNode newTopNode;
+        if (leftHeight > rightHeight) {
             // делаем правые повороты
-            if (leftHeight > rightHeight) {
-                smallRightRotation(node);
+            // Если leftHeight > rightHeight, значит у Node точно есть левый элемент
+            AvlNode leftNode = node.getLeft();
+            if (leftNode.getLeftHeight() >= leftNode.getRightHeight()) {
+                // Можно выполнить малый поворот вправо
+                smallRightRotation(leftNode);
+                newTopNode = leftNode;
             } else {
-                newTopNode = bigRightRotation(node);
+                // Если высота справа больше, чем высота слева, значит элемент справа точно есть
+                AvlNode movingNode = leftNode.getRight();
+                smallLeftRotation(movingNode);
+                smallRightRotation(movingNode);
+                newTopNode = movingNode;
             }
         } else {
             // делаем левые повороты
-            if (rightHeight > leftHeight) {
-                smallLeftRotation(node);
+            // Если leftHeight < rightHeight, значит у Node точно есть левый элемент
+            AvlNode rightNode = node.getRight();
+            if (rightNode.getRightHeight() >= rightNode.getLeftHeight()) {
+                // Можно выполнить малый поворот влево
+                smallLeftRotation(rightNode);
+                newTopNode = rightNode;
             } else {
-                newTopNode = bigLeftRotation(node);
+                // Если высота слева больше, чем высота справа, значит элемент слева точно есть
+                AvlNode movingNode = rightNode.getLeft();
+                smallRightRotation(movingNode);
+                smallLeftRotation(movingNode);
+                newTopNode = movingNode;
             }
         }
 
@@ -108,7 +108,7 @@ public class AvlTree implements TreeSearch {
         if (node == null) {
             return;
         }
-        AvlNode newTopNode = performNodeBalance(node);
+        AvlNode newTopNode = balanceByRotations(node);
         if (root == node) {
             root = newTopNode;
         } else {
@@ -146,7 +146,6 @@ public class AvlTree implements TreeSearch {
         } else {
             AvlNode node = insertNode(key, root);
             balanceFrom(node);
-            AvlTreeChecker.check(root);
         }
     }
 

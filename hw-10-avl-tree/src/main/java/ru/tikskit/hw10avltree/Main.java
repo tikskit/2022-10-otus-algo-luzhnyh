@@ -1,77 +1,149 @@
 package ru.tikskit.hw10avltree;
 
-import java.sql.Time;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 public class Main {
-    private static final int DATA_SIZE = 10;
+    private static final int DATA_SIZE = 24_000;
 
     public static void main(String[] args) {
-        avlTreePopulate();
-/*        return;
-        DataProvider randomDataProvider = new RandomDataProvider();
-        DataProvider incrementalDataProvider = new IncrementalDataProvider();
-        Timer timer = new Timer();
-        NumbersToSearchProvider numbersToSearchProvider = new NumbersToSearchProvider();
+//        populateTest();
+//        searchTest();
+        removeTest();
+    }
 
+    private static void populateTest() {
+        DataProvider randomDataProvider = new RandomDataProvider();
+        Timer timer = new Timer();
+
+        // случайные данные
         int[] randomData = randomDataProvider.getData(DATA_SIZE);
-        BSTree randomDataTree = new BSTree(randomData);
+
+        timer.start();
+        BSTree randomDataBSTree = new BSTree(randomData);
+        System.out.println("Построение BST дерева случайными данными: " + timer.stop());
+        BstTreeChecker.check(randomDataBSTree.getRoot());
+
+
+        timer.start();
+        AvlTree randomDataAvlTree = new AvlTree(randomData);
+        System.out.println("Построение АВЛ дерева случайными данными: " + timer.stop());
+        AvlTreeChecker.check(randomDataAvlTree.getRoot());
+
+        randomDataBSTree = null;
+        randomDataAvlTree = null;
+        randomData = null;
+        System.gc();
+
+        // Упорядочные данные
+        DataProvider ascDataProvider = new AscDataProvider();
+        int[] ascData = ascDataProvider.getData(DATA_SIZE);
+/*        timer.start();
+        BSTree incDataBSTree = new BSTree(ascData);
+        System.out.println("Построение BST дерева возрастающими данными: " + timer.stop());
+        BstTreeChecker.check(incDataBSTree.getRoot());*/
+
+        timer.start();
+        AvlTree incDataAvlTree = new AvlTree(ascData);
+        System.out.println("Построение АВЛ дерева возрастающими данными: " + timer.stop());
+        AvlTreeChecker.check(incDataAvlTree.getRoot());
+    }
+
+    public static void searchTest() {
+        DataProvider randomDataProvider = new RandomDataProvider();
+        DataProvider ascDataProvider = new AscDataProvider();
+        NumbersToSearchProvider numbersToSearchProvider = new NumbersToSearchProvider();
+        Timer timer = new Timer();
+
+        // случайные данные
+        int[] randomData = randomDataProvider.getData(DATA_SIZE);
         int[] randomDataNumbers = numbersToSearchProvider.getNumbers(randomData);
+
+        BSTree randomDataBSTree = new BSTree(randomData);
         timer.start();
         for (int n : randomDataNumbers) {
-//            randomDataTree.search(n);
-            randomDataTree.remove(n);
+            randomDataBSTree.search(n);
         }
-        System.out.println("Поиск по дереву со случайными данными: " + timer.stop());
-        BstTreeChecker.check(randomDataTree.getRoot());
+        System.out.println("Поиск по BST дереву со случайными данными: " + timer.stop());
 
-        int[] incData = incrementalDataProvider.getData(DATA_SIZE);
-        BSTree incDataTree = new BSTree(incData);
-        int[] incDataNumbers = numbersToSearchProvider.getNumbers(incData);
+        AvlTree randomDataAvlTree = new AvlTree(randomData);
         timer.start();
-        for (int n : incDataNumbers) {
-//            incDataTree.search(n);
-            incDataTree.remove(n);
+        for (int n : randomDataNumbers) {
+            randomDataAvlTree.search(n);
         }
-        System.out.println("Поиск по дереву с возрастающими данными: " + timer.stop());
-        BstTreeChecker.check(incDataTree.getRoot());*/
+        System.out.println("Поиск по АВЛ дереву со случайными данными: " + timer.stop());
 
+        randomDataBSTree = null;
+        randomDataAvlTree = null;
+        randomData = null;
+        System.gc();
+
+        // Упорядочные данные
+
+        int[] ascData = ascDataProvider.getData(DATA_SIZE);
+        int[] ascDataNumbers = numbersToSearchProvider.getNumbers(ascData);
+
+        BSTree ascDataBSTree = new BSTree(ascData);
+        timer.start();
+        for (int n : ascDataNumbers) {
+            ascDataBSTree.search(n);
+        }
+        System.out.println("Поиск по BST дереву с возрастающими данными: " + timer.stop());
+
+        AvlTree ascDataAvlTree = new AvlTree(ascData);
+        timer.start();
+        for (int n : ascDataNumbers) {
+            ascDataAvlTree.search(n);
+        }
+        System.out.println("Поиск по АВЛ дереву с возрастающими данными: " + timer.stop());
     }
 
-    private static void avlTreePopulate() {
+    public static void removeTest() {
         DataProvider randomDataProvider = new RandomDataProvider();
-        DataProvider incrementalDataProvider = new IncrementalDataProvider();
+        DataProvider ascDataProvider = new AscDataProvider();
+        NumbersToSearchProvider numbersToSearchProvider = new NumbersToSearchProvider();
         Timer timer = new Timer();
 
+        // случайные данные
         int[] randomData = randomDataProvider.getData(DATA_SIZE);
-        timer.start();
+        int[] randomDataNumbers = numbersToSearchProvider.getNumbers(randomData);
 
-        AvlTree randomDataTree = null;
-        try {
-            randomDataTree = new AvlTree(new int[]{21,2,42,50,60,11,31,75,65,46});
-            System.out.println("Построение АВЛ дерева случайными данными: " + timer.stop());
-            AvlTreeChecker.check(randomDataTree.getRoot());
-        } catch (Exception e) {
-            printData(randomData);
-            throw e;
+        BSTree randomDataBSTree = new BSTree(randomData);
+        timer.start();
+        for (int n : randomDataNumbers) {
+            randomDataBSTree.remove(n);
         }
+        System.out.println("Удаление из BST дереву со случайными данными: " + timer.stop());
 
-
-        int[] incData = incrementalDataProvider.getData(DATA_SIZE);
+        AvlTree randomDataAvlTree = new AvlTree(randomData);
         timer.start();
-        AvlTree incDataTree = new AvlTree(incData);
-        System.out.println("Построение АВЛ дерева возрастающими данными: " + timer.stop());
+        for (int n : randomDataNumbers) {
+            randomDataAvlTree.remove(n);
+        }
+        System.out.println("Удаление из АВЛ дереву со случайными данными: " + timer.stop());
+        AvlTreeChecker.check(randomDataAvlTree.getRoot());
 
-        AvlTreeChecker.check(incDataTree.getRoot());
+        randomDataBSTree = null;
+        randomDataAvlTree = null;
+        randomData = null;
+        System.gc();
 
+        // Упорядочные данные
+
+        int[] ascData = ascDataProvider.getData(DATA_SIZE);
+        int[] ascDataNumbers = numbersToSearchProvider.getNumbers(ascData);
+
+        BSTree ascDataBSTree = new BSTree(ascData);
+        timer.start();
+        for (int n : ascDataNumbers) {
+            ascDataBSTree.remove(n);
+        }
+        System.out.println("Удаление из BST дереву с возрастающими данными: " + timer.stop());
+
+        AvlTree ascDataAvlTree = new AvlTree(ascData);
+        timer.start();
+        for (int n : ascDataNumbers) {
+            ascDataAvlTree.remove(n);
+        }
+        System.out.println("Удаление из АВЛ дереву с возрастающими данными: " + timer.stop());
+        AvlTreeChecker.check(ascDataAvlTree.getRoot());
     }
 
-    private static void printData(int[] randomData) {
-        String value = Arrays.stream(randomData)
-                .boxed()
-                .map(t -> Integer.toString(t))
-                .collect(Collectors.joining(","));
-        System.out.println(value);
-    }
 }

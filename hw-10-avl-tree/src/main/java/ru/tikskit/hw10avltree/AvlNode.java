@@ -1,9 +1,19 @@
 package ru.tikskit.hw10avltree;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@ToString(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 public class AvlNode {
+    @ToString.Include
     private final int key;
+
     private AvlNode left;
+
     private AvlNode right;
     private AvlNode parent;
 
@@ -19,10 +29,16 @@ public class AvlNode {
         );
     }
 
+    public int getLeftHeight() {
+        return left != null ? left.getHeight() : 0;
+    }
+
+    public int getRightHeight() {
+        return right != null ? right.getHeight() : 0;
+    }
+
     public boolean isBalanced() {
-        int leftH = left != null ? left.getHeight() : 0;
-        int rightH = right != null ? right.getHeight() : 0;
-        return Math.abs(leftH - rightH) <= 1;
+        return Math.abs(getLeftHeight() - getRightHeight()) <= 1;
     }
 
     public void swap(AvlNode node) {
@@ -51,36 +67,6 @@ public class AvlNode {
             parent = node.parent;
         }
     }
-
-
-    public int getKey() {
-        return key;
-    }
-
-    public AvlNode getLeft() {
-        return left;
-    }
-
-    public void setLeft(AvlNode left) {
-        this.left = left;
-    }
-
-    public AvlNode getRight() {
-        return right;
-    }
-
-    public void setRight(AvlNode right) {
-        this.right = right;
-    }
-
-    public AvlNode getParent() {
-        return parent;
-    }
-
-    public void setParent(AvlNode parent) {
-        this.parent = parent;
-    }
-
 
     /**
      * Является ли узел левым дочерним для родителя
