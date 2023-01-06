@@ -7,6 +7,6 @@ public class RandomDataProvider implements DataProvider {
     @Override
     public int[] getData(int size) {
         Random rnd = new Random();
-        return rnd.ints(size, 0, size).toArray();
+        return rnd.ints(size, 0, 100).toArray();
     }
 }

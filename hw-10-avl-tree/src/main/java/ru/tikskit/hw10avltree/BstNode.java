@@ -27,8 +27,6 @@ public class BstNode {
             node.parent = this;
             parent = nodeInitParent;
             return;
-        } else {
-            node.parent = nodeInitParent;
         }
 
         if (node.parent == this) {
