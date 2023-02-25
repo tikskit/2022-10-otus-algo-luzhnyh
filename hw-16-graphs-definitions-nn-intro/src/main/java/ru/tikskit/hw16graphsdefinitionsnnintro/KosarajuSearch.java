@@ -1,11 +1,6 @@
 package ru.tikskit.hw16graphsdefinitionsnnintro;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Поиск сильно связных компонентов в орграфе
@@ -27,23 +22,49 @@ public class KosarajuSearch {
         return res;
     }
 
+    /**
+     * Есть ли у вершины не посещенные смежные
+     * @param vertex вершина для проверки
+     * @param graph мартица смежности
+     * @param visited список посещенных вершин
+     */
+    private boolean hasNotVisitedAdj(int vertex, int[][] graph, List<Integer> visited) {
+        int[] adj = graph[vertex]; // Получим смежные вершины
+        for (int a = 0; a < adj.length; a++) {
+            if (adj[a] == 1 // Это смежная вершина?
+                    && !visited.contains(a)) { // Это не посещенная вершина?
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private List<Integer> traverseFrom(int[][] graph, int start) {
         List<Integer> visited = new ArrayList<>(graph.length);
         Stack<Integer> stack = new Stack<>();
-        // Список выписанных вершин при совершении обхода
+        // Выписанные вершины в требуемом порядке
         List<Integer> writtenDown = new ArrayList<>(graph.length);
 
         stack.push(start);
+        List<Integer> path = new ArrayList<>();
         while (!stack.empty()) {
             Integer vertex = stack.pop();
-            visited.add(vertex);
+            if (!visited.contains(vertex)) {
+                visited.add(vertex);
+            }
 
-            // Получим смежные вершины
-            int[] adj = graph[vertex];
-            for (Integer a : adj) {
-                if (a != 0 // Это смежная вершина?
+            if (!hasNotVisitedAdj(vertex, graph, visited)) {
+                writtenDown.add(vertex);
+            }
+
+            int[] adj = graph[vertex]; // Получим смежные вершины
+            boolean noPath = true;
+            for (int a = 0; a < adj.length; a++) {
+                if (adj[a] == 1 // Это смежная вершина?
                         && !visited.contains(a)) { // Это не посещенная вершина?
-                    stack.push(a);
+                    stack.push(a); // если сюда попали, значит из vertex есть куда идти
+                    noPath = false;
                 }
             }
         }
