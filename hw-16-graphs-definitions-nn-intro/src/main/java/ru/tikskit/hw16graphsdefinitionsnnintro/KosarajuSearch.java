@@ -3,10 +3,10 @@ package ru.tikskit.hw16graphsdefinitionsnnintro;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * Поиск сильно связных компонентов в орграфе
@@ -29,53 +29,46 @@ public class KosarajuSearch {
     }
 
     /**
-     * Есть ли у вершины не посещенные смежные
-     * @param vertex вершина для проверки
-     * @param graph мартица смежности
-     * @param visited список посещенных вершин
+     * Получить список смежных непосещенных
      */
-    private boolean hasNotVisitedAdj(int vertex, int[][] graph, List<Integer> visited) {
-        int[] adj = graph[vertex]; // Получим смежные вершины
+    private Set<Integer> getAdjNotVisited(int vertex, int[][] graph, List<Integer> visited) {
+        Set<Integer> res = new HashSet<>();
+        int[] adj = graph[vertex];
         for (int a = 0; a < adj.length; a++) {
             if (adj[a] == 1 // Это смежная вершина?
-                    && !visited.contains(a)) { // Это не посещенная вершина?
-                return true;
+                    && !visited.contains(a)) {
+                res.add(a);
             }
         }
 
-        return false;
+        return res;
     }
 
-    private List<Integer> traverseFrom(int[][] graph, int start) {
-        List<Integer> visited = new ArrayList<>(graph.length);
-        Stack<Integer> stack = new Stack<>();
-        // Выписанные вершины в требуемом порядке
-        List<Integer> writtenDown = new ArrayList<>(graph.length);
-
-        stack.push(start);
-        List<Integer> path = new ArrayList<>();
-        while (!stack.empty()) {
-            Integer vertex = stack.pop();
-            if (!visited.contains(vertex)) {
-                visited.add(vertex);
-            }
-
-            if (!hasNotVisitedAdj(vertex, graph, visited)) {
-                writtenDown.add(vertex);
-            }
-
-            int[] adj = graph[vertex]; // Получим смежные вершины
-            boolean noPath = true;
-            for (int a = 0; a < adj.length; a++) {
-                if (adj[a] == 1 // Это смежная вершина?
-                        && !visited.contains(a)) { // Это не посещенная вершина?
-                    stack.push(a); // если сюда попали, значит из vertex есть куда идти
-                    noPath = false;
+    /**
+     * Рекурсивный обход вершин
+     * @param graph Матрица смежности графа
+     * @param vertex Вершина от которой выполняется обход
+     * @param visited Список посещенных вершин
+     * @return Список вершин в том порядке (но до их инвертирования), в котором мы будем их использовать при обходе
+     * инвертироавнного графа
+     */
+    private List<Integer> traverseFrom(int[][] graph, int vertex, List<Integer> visited) {
+        visited.add(vertex);
+        Set<Integer> adjNotVisited = getAdjNotVisited(vertex, graph, visited);
+        List<Integer> res = new ArrayList<>();
+        if (adjNotVisited.isEmpty()) {
+            res.add(vertex);
+            return res;
+        } else {
+            for (Integer a : adjNotVisited) {
+                if (!visited.contains(a)) {
+                    List<Integer> adj = traverseFrom(graph, a, visited);
+                    res.addAll(adj);
                 }
             }
+            res.add(vertex);
         }
-
-        return visited;
+        return res;
     }
 
     /**
@@ -96,17 +89,18 @@ public class KosarajuSearch {
     /**
      * Обход вершин и составление списка посещенных вершин
      * @param graph Матрица смежности
-     * @return
+     * @return выписанные посещенные вершины
      */
     private List<Integer> traverse(int[][] graph) {
         List<Integer> visited = new ArrayList<>(graph.length);
         Optional<Integer> vertex = pickVertex(graph, visited);
+        List<Integer> res = new ArrayList<>();
         while (vertex.isPresent()) {
-            List<Integer> visitedFrom = traverseFrom(graph, vertex.get());
-            visited.addAll(visitedFrom);
+            List<Integer> writtenDown = traverseFrom(graph, vertex.get(), visited);
+            res.addAll(writtenDown);
             vertex = pickVertex(graph, visited);
         }
-        return visited;
+        return res;
     }
 
     /**
@@ -120,9 +114,9 @@ public class KosarajuSearch {
         }
 
         // Выполним обход графа и выпишем посещенные вершины
-        List<Integer> vertexVisited = traverse(graph);
+        List<Integer> writtenDown = traverse(graph);
         // Запишем посещенные вершины в обратном порядке
-        Collections.reverse(vertexVisited);
+        Collections.reverse(writtenDown);
         // Инвертируем дуги орграфа
         int[][] transposedGraph = transpose(graph);
 
