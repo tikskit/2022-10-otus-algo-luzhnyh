@@ -2,6 +2,7 @@ package ru.tikskit.hw16graphsdefinitionsnnintro;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +32,7 @@ public class KosarajuSearch {
     /**
      * Получить список смежных непосещенных
      */
-    private Set<Integer> getAdjNotVisited(int vertex, int[][] graph, List<Integer> visited) {
+    private Set<Integer> getAdjNotVisited(int vertex, int[][] graph, Collection<Integer> visited) {
         Set<Integer> res = new HashSet<>();
         int[] adj = graph[vertex];
         for (int a = 0; a < adj.length; a++) {
@@ -103,6 +104,78 @@ public class KosarajuSearch {
         return res;
     }
 
+
+    /**
+     * Возвращает следующую вершину, на которую нужно идти при поиске сильно связного компонента в инвертированном графе
+     * @param vertex вершина, от которой определяем путь
+     * @param graph инвертированный граф
+     * @param directionsHint подсказка для выбора направления
+     * @param visited список посещенных вершин
+     * @return Возвращает номер вершины, куда идти, либо null, если идти некуда.
+     */
+    private Integer chooseDirection(Integer vertex, int[][] graph, List<Integer> directionsHint, Collection<Integer> visited) {
+        Set<Integer> adjNotVisited = getAdjNotVisited(vertex, graph, visited);
+        if (adjNotVisited.size() > 1) {
+            /* Возможных направлений оказалось несколько, сперва попробуем выбрать одно исходя из directionsHint */
+            for (Integer integer : directionsHint) {
+                for (Integer a : adjNotVisited) {
+                    if (a.equals(integer)) {
+                        return a;
+                    }
+                }
+            }
+            // Подходящих подсказок для выбора направления не оказалось, поэтому идем в любую возможную сторону
+            return adjNotVisited.stream()
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Ожидалось, что в наборе есть несколько элементов"));
+        } else if (adjNotVisited.size() == 1) {
+            // Если существует только одна смежная вершина, то вернем ее
+            return adjNotVisited.stream()
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Ожидался 1 элемент в наборе"));
+        } else {
+            // Смежных вершин нет, идти некуда
+            return null;
+        }
+    }
+
+    /**
+     * Рекурсивный поиск компоненты сильной связности от вершины vertex
+     */
+    private Set<Integer> traverseInSCC(int[][] graph, Integer vertex, List<Integer> directionsHint, Collection<Integer> visited) {
+        visited.add(vertex);
+        directionsHint.remove(vertex);
+        Integer next = chooseDirection(vertex, graph, directionsHint, visited);
+        Set<Integer> res = new HashSet<>();
+        if (next != null) {
+            Set<Integer> r = traverseInSCC(graph, next, directionsHint, visited);
+            res.addAll(r);
+        }
+        res.add(vertex);
+        return res;
+    }
+
+    /**
+     * Поиск компонент сильной связности в инвертированном графе
+     * @param graph Инвертированный граф
+     * @param direction последовательность вершин, задающих порядок их выбора и направления обхода
+     * @return список наборов, каждый из которых является компонентом сильной связности
+     */
+    private List<Set<Integer>> getSCC(int[][] graph, List<Integer> direction) {
+        if (direction.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Set<Integer> visited = new HashSet<>(graph.length);
+        List<Set<Integer>> res = new ArrayList<>();
+        while (visited.size() < graph.length) {
+            Integer startFrom = direction.get(0); /* Размер direction изначально равен размеру visited, поэтому не
+                                                    боимся тут получить IndexOutOfBoundsException*/
+            Set<Integer> scc = traverseInSCC(graph, startFrom, direction, visited);
+            res.add(scc);
+        }
+        return res;
+    }
+
     /**
      * Поиск сильно связных компонентов графа
      * @param graph Матрица смежности;
@@ -120,6 +193,6 @@ public class KosarajuSearch {
         // Инвертируем дуги орграфа
         int[][] transposedGraph = transpose(graph);
 
-        return null;
+        return getSCC(transposedGraph, writtenDown);
     }
 }
