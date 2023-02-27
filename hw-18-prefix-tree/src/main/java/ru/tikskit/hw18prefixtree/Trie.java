@@ -3,7 +3,7 @@ package ru.tikskit.hw18prefixtree;
 public class Trie {
 
     private static class Node {
-        private Node[] child = new Node['A'];
+        private Node[] child = new Node[256];
         private boolean isEnd = false;
 
         public boolean exists(char c) {
