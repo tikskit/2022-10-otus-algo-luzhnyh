@@ -10,7 +10,8 @@ public class Edge {
 
     public Edge(int v1, int v2) {
         if (v1 == v2) {
-            throw new IllegalArgumentException("Вернишны не могут совпадать");
+            // В этом графе петель быть не должно
+            throw new IllegalArgumentException(String.format("Вернишны %s не могут совпадать", v1));
         }
         this.v1 = v1;
         this.v2 = v2;
@@ -22,5 +23,10 @@ public class Edge {
 
     public int getV2() {
         return v2;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s-%s", Utils.numToLetter(v1), Utils.numToLetter(v2));
     }
 }

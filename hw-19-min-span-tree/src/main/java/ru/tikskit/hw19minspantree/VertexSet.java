@@ -47,7 +47,7 @@ public class VertexSet {
         Integer delegate2 = findDelegateFor(vertex2);
 
         if (!delegate1.equals(delegate2)) {
-            delegates.put(vertex2, vertex1);
+            delegates.put(delegate1, delegate2);
         }
     }
 }

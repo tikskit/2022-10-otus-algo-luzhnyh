@@ -1,8 +1,6 @@
 package ru.tikskit.hw19minspantree;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -14,8 +12,8 @@ import java.util.List;
  */
 public class KruskalSearch {
     /**
-     * Возвращает ребра в графе
-     * Посколько матрица смежности ненаправленного гроафа симметрична относительно главной диагонали, мы не будем обходить
+     * Возвращает все ребра в графе
+     * Поскольку матрица смежности ненаправленного гроафа симметрична относительно главной диагонали, мы не будем обходить
      * всю матрицу, а только ту ее часть, которая выше диагонали. Это также позволит избежать дублирование одних и тех же
      * ребер
      * @param graph матрица смежности графа
@@ -23,12 +21,16 @@ public class KruskalSearch {
      */
     private WeightedEdge[] getAllEdges(int[][] graph) {
         List<WeightedEdge> list = new ArrayList<>();
-        for (int r = 1; r < graph.length; r++) { // Начинаем с 1, потому что по условию у нас петель нет
+        for (int r = 0; r < graph.length; r++) {
             for (int c = r; c < graph[r].length; c++) {
-                list.add(new WeightedEdge(r, c, graph[r][c]));
+                if (graph[r][c] != 0) {
+                    list.add(new WeightedEdge(r, c, graph[r][c]));
+                }
             }
         }
-        return (WeightedEdge[])list.toArray();
+        WeightedEdge[] res = new WeightedEdge[list.size()];
+        list.toArray(res);
+        return res;
     }
 
     /**
@@ -41,12 +43,17 @@ public class KruskalSearch {
             return new Edge[0];
         }
         // Используем сортировку Шелла для сортировки ребер по их весу
-        SortShell sort = new SortShell(edges);
-        sort.sort();
+        SortShell shellSort = new SortShell(edges);
+        shellSort.sort();
 
         return edges;
     }
 
+    /**
+     * Получить минимальный скелет графа
+     * @param graph матрица смежности графа
+     * @return список ребер
+     */
     public Edge[] getMinSpinTree(int[][] graph) {
         /* Нам нужно из графа перебрать все ребра в порядке неубывания. Для этого сперва получим отсортированный по весу
         * массив ребер  */
@@ -56,18 +63,19 @@ public class KruskalSearch {
         }
 
         VertexSet sets = new VertexSet(sortedEdges);
-        Edge[] res = new Edge[sortedEdges.length];
+        List<Edge> edges = new ArrayList<>();
 
-        for (int i = 0; i < sortedEdges.length; i++) {
-            Edge e = sortedEdges[i];
+        for (Edge e : sortedEdges) {
             Integer delegateV1 = sets.findDelegateFor(e.getV1());
             Integer delegateV2 = sets.findDelegateFor(e.getV2());
             if (!delegateV1.equals(delegateV2)) {
                 sets.unite(e.getV1(), e.getV2());
-                res[i] = e;
+                edges.add(e);
             }
         }
 
+        Edge[] res = new Edge[edges.size()];
+        edges.toArray(res);
         return res;
     }
 }

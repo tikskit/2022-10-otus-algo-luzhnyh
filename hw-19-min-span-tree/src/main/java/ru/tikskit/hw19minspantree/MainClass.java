@@ -1,6 +1,9 @@
 package ru.tikskit.hw19minspantree;
 
+import java.util.Arrays;
+
 public class MainClass {
+
     public static void main(String[] args) {
         int[][] graph = {
               //  A  B  C  D  E  F  G  H  I
@@ -17,6 +20,8 @@ public class MainClass {
 
         KruskalSearch s = new KruskalSearch();
         Edge[] minSpinTree = s.getMinSpinTree(graph);
-        System.out.println(minSpinTree);
+        Arrays.stream(minSpinTree).forEach(
+                e -> System.out.printf("%s-%s%n", Utils.numToLetter(e.getV1()), Utils.numToLetter(e.getV2()))
+        );
     }
 }
