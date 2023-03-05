@@ -27,7 +27,7 @@ public class DejkstraSearch {
             // Найдем самую дешевую из смежных вершин
             int cheapestVertex = -1;
             for (int a = 0; a < adjs.length; a++) {
-                if (adjs[a] > 0 && !path.contains(a)) {
+                if (adjs[a] > 0) {
                     if (cheapestVertex == -1 || adjs[cheapestVertex] > adjs[a]) {
                         cheapestVertex = a;
                     }
@@ -38,6 +38,8 @@ public class DejkstraSearch {
             }
 
             totalCost += adjs[cheapestVertex];
+            graph[v][cheapestVertex] = 0;
+            graph[cheapestVertex][v] = 0;
             path.add(cheapestVertex);
             v = cheapestVertex;
         }
