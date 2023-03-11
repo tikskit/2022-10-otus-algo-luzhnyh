@@ -18,7 +18,7 @@ public class SearchBMH implements Search {
 
     @Override
     public int search(String text, String mask) {
-        int shift[] = createShift(mask);
+        int[] shift = createShift(mask);
         int t = 0;
         while (t <= text.length() - mask.length()) {
             int m = mask.length() - 1;
@@ -30,7 +30,7 @@ public class SearchBMH implements Search {
             }
             t += shift[text.charAt(t + mask.length() - 1)];
         }
-        return 0;
+        return -1;
     }
 
     @Override
