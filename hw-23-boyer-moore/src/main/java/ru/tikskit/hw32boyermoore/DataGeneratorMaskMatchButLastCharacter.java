@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Генератор тестовых данных, в которых маска совпадает, кроме последнего символа
  */
 public class DataGeneratorMaskMatchButLastCharacter implements DataGenerator {
-    private static final int TEXT_LENGTH = 100000;
+    private static final int TEXT_LENGTH = 1000000;
     private static final int MASK_LENGTH = 1000;
     @Override
     public Data gen() {

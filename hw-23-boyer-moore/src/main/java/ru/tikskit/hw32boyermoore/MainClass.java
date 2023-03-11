@@ -14,9 +14,11 @@ public class MainClass {
         algs.add(new SearchFullScan());
         algs.add(new SearchBMH());
         algs.add(new SearchSuffix());
+        algs.add(new SearchStringIndexOf());
+        algs.add(new SearchPattern());
         DataProvider dataProvider = new DataProviderImpl();
         Data[] data = dataProvider.getData();
-        int[] iterations = {100, 1000};
+        int[] iterations = {100};
         for (Search s : algs) {
             for (Data d : data) {
                 for (int i : iterations) {

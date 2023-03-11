@@ -37,10 +37,6 @@ public class SearchSuffix implements Search {
         while (t <= text.length() - mask.length()) {
             int m = mask.length() - 1;
             int count = 0;
-            /*
-            ABCD
-            CD
-             */
             while(m >= 0 && text.charAt(t + m) == mask.charAt(m)) {
                 m--;
                 count++;
