@@ -7,7 +7,7 @@ public class MainClass {
     public static void main(String[] args) {
 /*        Search s = new SearchSuffix();
         String text = "XXXXXXXXXXXXBC-ABC-BC-C-ABCXXXXXXXXXXXXXXXX";
-        String mask = "BC-ABC-BC-C-ABC";
+        String mask = "ABC-ABC-BC-C-ABC";
         int search = s.search(text, mask);
         System.out.println(search);*/
         List<Search> algs = new ArrayList<>();
@@ -18,12 +18,12 @@ public class MainClass {
         algs.add(new SearchPattern());
         DataProvider dataProvider = new DataProviderImpl();
         Data[] data = dataProvider.getData();
-        int[] iterations = {100};
+        int[] iterations = {10, 100};
         for (Search s : algs) {
             for (Data d : data) {
                 for (int i : iterations) {
                     SearchResult res = doSearch(s, d.getText(), d.getMask(), i);
-                    System.out.printf("%s iterations of %s over %s: avg %sms, %shits%n", i, s.getDescription(), d.getDescription(), res.avgTime(), res.hitsCount());
+                    System.out.printf("%s iterations of %s over %s: avg %sms, %s hits%n", i, s.getDescription(), d.getDescription(), res.avgTime(), res.hitsCount());
                 }
             }
         }

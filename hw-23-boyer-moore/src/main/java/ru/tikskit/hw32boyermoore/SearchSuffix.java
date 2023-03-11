@@ -3,14 +3,15 @@ package ru.tikskit.hw32boyermoore;
 public class SearchSuffix implements Search {
     private int[] createShift(String mask) {
         /*
-        Таблица смещений. Индекс таблицы соответствует длине маски. А значение элемента содержит величину смещения
+        Таблица смещений. Индекс таблицы соответствует количеству совпавших символов маски и текста, а значение элемента
+        содержит величину смещения
          */
         int[] shift = new int[mask.length()];
         // Инициализируем таблицу смещений значениием, равным по умолчанию 1
         for (int i = 0; i < shift.length; i++) {
             shift[i] = 1;
         }
-        // Теперь определим для каждого суффикса величину смежения
+        // Теперь определим для каждого суффикса величину смещения
         for (int len = 1; len <= mask.length(); len++) {
             String suffix = mask.substring(mask.length() - len);
             // Начинаем искать, есть ли левее в маске еще совпадения этого же суффикса
@@ -29,7 +30,7 @@ public class SearchSuffix implements Search {
     @Override
     public int search(String text, String mask) {
         if (mask.length() > text.length()) {
-            return 0;
+            return 1;
         }
 
         int[] shift = createShift(mask);
@@ -46,7 +47,7 @@ public class SearchSuffix implements Search {
             }
             t += shift[count];
         }
-        return 0;
+        return -1;
     }
 
     @Override
