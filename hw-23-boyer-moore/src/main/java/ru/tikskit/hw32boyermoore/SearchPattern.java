@@ -7,7 +7,7 @@ public class SearchPattern implements Search {
     public int search(String text, String mask) {
         Pattern pattern = Pattern.compile(mask);
 
-        return pattern.matcher(text).find() ? 0 : -1;
+        return pattern.matcher(text).find() ? 1 : -1;
     }
 
     @Override
