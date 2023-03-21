@@ -1,8 +1,5 @@
 package ru.tikskit.hw25kmp;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class KMPPiFast implements Search {
 
     public int[] createPiFast(String mask) {
