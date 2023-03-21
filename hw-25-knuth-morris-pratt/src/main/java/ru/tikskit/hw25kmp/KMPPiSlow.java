@@ -16,7 +16,16 @@ public class KMPPiSlow implements Search {
     }
     @Override
     public int search(String text, String mask) {
-        return 0;
+        String str = mask + '@' + text;
+        int val = mask.length();
+        int[] pi = createPiSlow(str);
+        for (int p = 0; p < pi.length; p++) {
+            if (pi[p] == val) {
+                return pi[p];
+            }
+        }
+        return -1;
+
     }
 
     @Override

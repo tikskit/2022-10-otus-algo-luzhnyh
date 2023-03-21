@@ -1,5 +1,8 @@
 package ru.tikskit.hw25kmp;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class KMPPiFast implements Search {
 
     public int[] createPiFast(String mask) {
@@ -20,7 +23,15 @@ public class KMPPiFast implements Search {
     }
     @Override
     public int search(String text, String mask) {
-        return 0;
+        String str = mask + '@' + text;
+        int val = mask.length();
+        int[] pi = createPiFast(str);
+        for (int p = 0; p < pi.length; p++) {
+            if (pi[p] == val) {
+                return pi[p];
+            }
+        }
+        return -1;
     }
 
     @Override

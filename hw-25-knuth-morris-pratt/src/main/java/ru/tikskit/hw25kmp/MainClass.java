@@ -5,21 +5,21 @@ import java.util.List;
 
 public class MainClass {
     public static void main(String[] args) {
-        KMPPiFast slow = new KMPPiFast();
-        int[] pi = slow.createPiFast("AABAABAAABA");
-        System.out.println(pi);
-/*        Search s = new KMPPiSlow();
-        String text = "XXXXXXXXXXXXBC-ABC-BC-C-ABCXXXXXXXXXXXXXXXX";
+/*        Search s = new KMPPiFast();
+        String text = "XXXXXXXXXXXXABC-ABC-BC-C-ABCXXXXXXXXXXXXXXXX";
         String mask = "ABC-ABC-BC-C-ABC";
         int search = s.search(text, mask);
-        System.out.println(search);
-        List<Search> algs = new ArrayList<>();*/
-/*        algs.add(new SearchFullScan());
+        System.out.println(search);*/
+
+        List<Search> algs = new ArrayList<>();
+        algs.add(new SearchFullScan());
         algs.add(new SearchBMH());
         algs.add(new SearchSuffix());
         algs.add(new SearchStringIndexOf());
-        algs.add(new SearchPattern());*/
-/*        DataProvider dataProvider = new DataProviderImpl();
+        algs.add(new SearchPattern());
+//        algs.add(new KMPPiSlow());
+        algs.add(new KMPPiFast());
+        DataProvider dataProvider = new DataProviderImpl();
         Data[] data = dataProvider.getData();
         int[] iterations = {10, 100};
         for (Search s : algs) {
@@ -29,7 +29,7 @@ public class MainClass {
                     System.out.printf("%s iterations of %s over %s: avg %sms, %s hits%n", i, s.getDescription(), d.getDescription(), res.avgTime(), res.hitsCount());
                 }
             }
-        }*/
+        }
     }
 
     private static SearchResult doSearch(Search s, String text, String mask, int iterCount) {
