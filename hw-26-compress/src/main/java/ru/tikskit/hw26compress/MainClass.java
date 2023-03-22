@@ -4,9 +4,9 @@ import java.nio.charset.StandardCharsets;
 
 public class MainClass {
     public static void main(String[] args) {
-        String str = "AAADSDASKKLJJJDDDDSQWLWWWWW";
+        String str = "AAADSDASKKLJJJDDDDSQWLWWWWWAA";
         byte[] srcData = str.getBytes(StandardCharsets.UTF_8);
-        Compressor c = new SimpleRLE();
+        Compressor c = new EnhancedRLE();
         byte[] compressed = c.compress(srcData);
         byte[] uncompressedData = c.uncompress(compressed);
         String res = new String(uncompressedData);

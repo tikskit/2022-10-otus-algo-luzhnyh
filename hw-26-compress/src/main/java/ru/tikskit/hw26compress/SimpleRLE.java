@@ -9,18 +9,13 @@ import java.util.List;
  */
 public class SimpleRLE implements Compressor {
 
-    /**
-     * Сжимает массив данных
-     * @param data входной массив данных
-     * @return сжатый массив
-     */
     @Override
     public byte[] compress(byte[] data) {
         if (data.length == 0) {
             return new byte[0];
         }
 
-        byte[] buff = new byte[data.length*2];
+        byte[] buff = new byte[data.length * 2];
         int buffSize = 0;
 
         int seqLen = 1; // длина последовательности одинаковых байтов
