@@ -20,8 +20,8 @@ public class SimpleRLE implements Compressor {
             return new byte[0];
         }
 
-        byte[] res = new byte[data.length];
-        int resSize = 0;
+        byte[] buff = new byte[data.length*2];
+        int buffSize = 0;
 
         int seqLen = 1; // длина последовательности одинаковых байтов
         byte curVal = data[0]; // Текущий байт
@@ -30,13 +30,19 @@ public class SimpleRLE implements Compressor {
             if (data[pos] == curVal && seqLen < 256) {
                 seqLen++;
             } else {
-                res[resSize++] = (byte)seqLen;
-                res[resSize++] = curVal;
+                buff[buffSize++] = (byte)seqLen;
+                buff[buffSize++] = curVal;
                 curVal = data[pos];
                 seqLen = 1;
             }
             pos++;
         }
+
+        buff[buffSize++] = (byte)seqLen;
+        buff[buffSize++] = curVal;
+
+        byte[] res = new byte[buffSize];
+        System.arraycopy(buff, 0, res, 0, buffSize);
 
         return res;
     }
