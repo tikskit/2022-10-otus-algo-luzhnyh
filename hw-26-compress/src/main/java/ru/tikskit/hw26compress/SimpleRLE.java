@@ -8,28 +8,29 @@ import java.util.List;
  * реализация сжатия по алгоритму простого RLE
  */
 public class SimpleRLE implements Compressor {
+
     /**
      * Сжимает массив данных
      * @param data входной массив данных
      * @return сжатый массив
      */
     @Override
-    public int[] compress(int[] data) {
+    public byte[] compress(byte[] data) {
         if (data.length == 0) {
-            return new int[0];
+            return new byte[0];
         }
 
-        int[] res = new int[data.length];
+        byte[] res = new byte[data.length];
         int resSize = 0;
 
-        int seqLen = 1;
-        int curVal = data[0];
-        int pos = 1;
+        int seqLen = 1; // длина последовательности одинаковых байтов
+        byte curVal = data[0]; // Текущий байт
+        int pos = 1; // текущая позиция в массиве байт
         while (pos < data.length) {
-            if (data[pos] == curVal) {
-                seqLen++; /*В этом упрощенном варианте у нас не может быть переполнения Integer, поскольку data это массив, а не поток*/
+            if (data[pos] == curVal && seqLen < 256) {
+                seqLen++;
             } else {
-                res[resSize++] = seqLen;
+                res[resSize++] = (byte)seqLen;
                 res[resSize++] = curVal;
                 curVal = data[pos];
                 seqLen = 1;
@@ -41,27 +42,27 @@ public class SimpleRLE implements Compressor {
     }
 
     @Override
-    public int[] uncompress(int[] data) {
+    public byte[] uncompress(byte[] data) {
         if (data.length == 0) {
-            return new int[0];
+            return new byte[0];
         }
 
-        LinkedList<Integer> res = new LinkedList<>();
+        LinkedList<Byte> res = new LinkedList<>();
         int pos = 0;
-        int resDataLength = 0;
+        int resSize = 0;
         while (pos < data.length) {
-            int seqLength = data[pos++];
-            int val = data[pos++];
-            resDataLength += seqLength;
+            int seqLength = data[pos++] & 0xFF;
+            byte val = data[pos++];
+            resSize += seqLength;
             for (int i = 0; i < seqLength; i++) {
                 res.addLast(val);
             }
         }
 
-        int[] out = new int[resDataLength];
+        byte[] out = new byte[resSize];
         int i = 0;
-        for (Integer re : res) {
-            out[i++] = re;
+        for (Byte b : res) {
+            out[i++] = b;
         }
 
         return out;
