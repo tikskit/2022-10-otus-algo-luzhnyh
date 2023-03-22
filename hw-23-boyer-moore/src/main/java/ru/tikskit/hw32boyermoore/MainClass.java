@@ -23,7 +23,7 @@ public class MainClass {
             for (Data d : data) {
                 for (int i : iterations) {
                     SearchResult res = doSearch(s, d.getText(), d.getMask(), i);
-                    System.out.printf("%s iterations of %s over %s: avg %sms, %s hits%n", i, s.getDescription(), d.getDescription(), res.avgTime(), res.hitsCount());
+                    System.out.printf("%s iterations of %s over %s: avg %sms (%s hits)%n", i, s.getDescription(), d.getDescription(), res.avgTime(), res.hitsCount());
                 }
             }
         }
