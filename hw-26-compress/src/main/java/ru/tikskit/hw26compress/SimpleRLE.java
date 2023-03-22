@@ -43,7 +43,7 @@ public class SimpleRLE implements Compressor {
     }
 
     @Override
-    public byte[] uncompress(byte[] data) {
+    public byte[] decompress(byte[] data) {
         if (data.length == 0) {
             return new byte[0];
         }

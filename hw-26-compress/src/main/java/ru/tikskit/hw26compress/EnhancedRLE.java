@@ -51,8 +51,6 @@ public class EnhancedRLE implements Compressor {
             if (data.length > 0) {
                 resBuffer = new byte[data.length * 2];
                 lastValue = data[pos++];
-                seqStartIndex = 0;
-                arbitrarySeqStartIndex = 0;
             } else {
                 resBuffer = new byte[0];
             }
@@ -62,12 +60,12 @@ public class EnhancedRLE implements Compressor {
          * Если существует последовательность неповторяющихся байтов, то добавляем ее в результат и обрываем.
          */
         private void stopArbitrarySeq() {
-            if (arbitrarySeqLength > 0) {
+            if (arbitrarySeqLength > 1) {
                 // Не включаем байты, которые входят в последовательность повторяющихся символов
                 if (seqLength >= MIN_BYTES_COUNT_SEQUENCE) {
                     arbitrarySeqLength -= (MIN_BYTES_COUNT_SEQUENCE - 1);
                 }
-                if (arbitrarySeqLength > 0) {
+                if (arbitrarySeqLength > 1) {
                     resBuffer[resBufferSize++] = (byte) (-arbitrarySeqLength);
                     System.arraycopy(data, arbitrarySeqStartIndex, resBuffer, resBufferSize, arbitrarySeqLength);
                     resBufferSize += arbitrarySeqLength;
@@ -109,7 +107,7 @@ public class EnhancedRLE implements Compressor {
             if (arbitrarySeqLength > Byte.MAX_VALUE) {
                 arbitrarySeqLength = Byte.MAX_VALUE;
 
-                resBuffer[resBufferSize++] = Byte.MAX_VALUE;
+                resBuffer[resBufferSize++] = -Byte.MAX_VALUE;
                 System.arraycopy(data, arbitrarySeqStartIndex, resBuffer, resBufferSize, arbitrarySeqLength);
                 resBufferSize += arbitrarySeqLength;
 
@@ -154,11 +152,11 @@ public class EnhancedRLE implements Compressor {
         }
 
         public byte[] compress() {
-            while (next()) {};
+            while (next()) {}
 
             if (seqLength >= MIN_BYTES_COUNT_SEQUENCE) {
                 stopSequence();
-            } else if (arbitrarySeqLength > 0) {
+            } else if (arbitrarySeqLength > 1) {
                 stopArbitrarySeq();
             }
 
@@ -179,7 +177,7 @@ public class EnhancedRLE implements Compressor {
     }
 
     @Override
-    public byte[] uncompress(byte[] data) {
+    public byte[] decompress(byte[] data) {
         if (data.length == 0) {
             return new byte[0];
         }
