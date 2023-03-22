@@ -21,7 +21,7 @@ public class MainClass {
         algs.add(new KMPPiFast());
         DataProvider dataProvider = new DataProviderImpl();
         Data[] data = dataProvider.getData();
-        int[] iterations = {5};
+        int[] iterations = {100};
         for (Search s : algs) {
             for (Data d : data) {
                 for (int i : iterations) {
