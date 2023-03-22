@@ -12,21 +12,30 @@ public class MainClass {
     public static void main(String[] args) throws IOException {
 
         if (args.length == 0) {
-            System.out.println("java ru.tikskit.hw26compress.MainClass src tar mode");
+            System.out.println("java ru.tikskit.hw26compress.MainClass src tar mode algo");
             System.out.println("\tsrc source file name");
             System.out.println("\ttar target file name");
             System.out.println("\tmode c - for compressing, d - for decompressing");
+            System.out.println("\talgo s - for simple, e - for enhanced");
             System.out.println("example:");
-            System.out.println("\tjava ru.tikskit.hw26compress.MainClass file.in tar file.out");
+            System.out.println("\tjava ru.tikskit.hw26compress.MainClass file.in file.out c e");
         } else {
             String sourceFileName = args[0];
             String targetFileName = args[1];
             String mode = args[2];
+            String algo = args[3];
+
+            Compressor c;
+            if (algo.equalsIgnoreCase("s")) {
+                c = new SimpleRLE();
+            } else {
+                c = new EnhancedRLE();
+            }
 
             if (mode.equalsIgnoreCase("c")) {
-                compressFile(sourceFileName, targetFileName);
+                compressFile(sourceFileName, targetFileName, c);
             } else if (mode.equalsIgnoreCase("d")) {
-                decompressFile(sourceFileName, targetFileName);
+                decompressFile(sourceFileName, targetFileName, c);
             }
         }
 
@@ -45,24 +54,22 @@ public class MainClass {
         System.out.printf("%s bytes were compressed to %s%n", srcData.length, compressed.length);*/
     }
 
-    private static void decompressFile(String src, String tar) throws IOException {
+    private static void decompressFile(String src, String tar, Compressor compressor) throws IOException {
         try (BufferedInputStream in =
                      new BufferedInputStream(new FileInputStream(src), 1024);
              BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tar), 1024)) {
             byte[] bytes = in.readAllBytes();
-            Compressor c = new EnhancedRLE();
-            byte[] decomressed = c.decompress(bytes);
+            byte[] decomressed = compressor.decompress(bytes);
             out.write(decomressed);
         }
     }
 
-    private static void compressFile(String src, String tar) throws IOException {
+    private static void compressFile(String src, String tar, Compressor compressor) throws IOException {
         try (BufferedInputStream in =
                      new BufferedInputStream(new FileInputStream(src), 1024);
              BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tar), 1024)) {
             byte[] bytes = in.readAllBytes();
-            Compressor c = new EnhancedRLE();
-            byte[] compressed = c.compress(bytes);
+            byte[] compressed = compressor.compress(bytes);
             out.write(compressed);
         }
     }
