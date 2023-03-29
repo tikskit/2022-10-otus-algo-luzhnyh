@@ -33,6 +33,7 @@ public class FileShingler implements AutoCloseable {
                 attachment.flip();
                 attachment.get(destArray, 0, readBytes);
                 stringBuffer.append(destArray);
+                System.out.println("test");
                 shingleBuffer.append(stringBuffer.getString());
 
                 lastPosition += readBytes;
@@ -45,7 +46,7 @@ public class FileShingler implements AutoCloseable {
 
         @Override
         public void failed(Throwable exc, ByteBuffer attachment) {
-
+            System.err.println(exc);
         }
     };
 

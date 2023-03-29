@@ -20,7 +20,7 @@ public class StringBuffer {
     }
 
     private void appendData(byte[] data) {
-        System.arraycopy(data, 0, data, dataSize, data.length);
+        System.arraycopy(data, 0, this.data, dataSize, data.length);
         dataSize += data.length;
     }
 
