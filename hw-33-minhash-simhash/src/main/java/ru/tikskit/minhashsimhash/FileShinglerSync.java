@@ -12,26 +12,19 @@ import java.util.function.Consumer;
  */
 public class FileShinglerSync {
     private static final int BUFFER_CAPACITY = 1024;
-    private static final int SHINGLE_SIZE = 9;
 
     private final String srcFile;
-    private final Consumer<List<Shingle>> shinglesConsumer;
     private final StringBuffer stringBuffer;
-    private final ShingleBuffer shingleBuffer = new ShingleBuffer(SHINGLE_SIZE);
+    private final ShingleBuffer shingleBuffer;
 
     public FileShinglerSync(String srcFile, Consumer<List<Shingle>> shinglesConsumer, Charset fileCharset) {
         this.srcFile = srcFile;
-        this.shinglesConsumer = shinglesConsumer;
-        this.stringBuffer = new StringBuffer(fileCharset);
+        this.shingleBuffer = new ShingleBuffer(shinglesConsumer);
+        this.stringBuffer = new StringBuffer(fileCharset, shingleBuffer::append);
     }
 
     private void processBytes(byte[] buff, int readBytes) {
         stringBuffer.append(buff, readBytes);
-        shingleBuffer.append(stringBuffer.getString());
-        List<Shingle> shingles = shingleBuffer.getShingles();
-        if (!shingles.isEmpty()) {
-            shinglesConsumer.accept(shingles);
-        }
     }
 
     public void read() throws IOException {
@@ -46,5 +39,7 @@ public class FileShinglerSync {
                 }
             } while (readBytes > 0);
         }
+        stringBuffer.done();
+        shingleBuffer.done();
     }
 }
