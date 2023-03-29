@@ -1,7 +1,7 @@
 package ru.tikskit.minhashsimhash;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShingleBuffer {
     private final StringBuilder buffer = new StringBuilder();
@@ -15,15 +15,16 @@ public class ShingleBuffer {
         buffer.append(str);
     }
 
-    public Set<Shingle> getShingles() {
+    public List<Shingle> getShingles() {
         String string = buffer.toString();
-        String[] bufferWords = string.split("\\s+");
-        Set<Shingle> res = new HashSet<>();
+        String[] bufferWords = string.split("[\\s\\r\\n\\t]+");
+        List<Shingle> res = new ArrayList<>();
         if (bufferWords.length >= shingleSize) {
             String[] shingleWords = new String[shingleSize];
-            for (int i = 0; i < bufferWords.length - shingleSize; i++) {
+            for (int i = 0; i <= bufferWords.length - shingleSize; i++) {
                 System.arraycopy(bufferWords, i, shingleWords, 0, shingleSize);
-                res.add(new Shingle(shingleWords));
+                Shingle shingle = new Shingle(shingleWords);
+                res.add(shingle);
             }
         }
 

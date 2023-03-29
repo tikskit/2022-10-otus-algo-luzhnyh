@@ -19,9 +19,9 @@ public class StringBuffer {
         this.charset = charset;
     }
 
-    private void appendData(byte[] data) {
-        System.arraycopy(data, 0, this.data, dataSize, data.length);
-        dataSize += data.length;
+    private void appendData(byte[] data, int length) {
+        System.arraycopy(data, 0, this.data, dataSize, length);
+        dataSize += length;
     }
 
     /**
@@ -45,11 +45,11 @@ public class StringBuffer {
         return Optional.of(string);
     }
 
-    public void append(byte[] data) {
-        if (data.length > BUFFER_SIZE) {
-            throw new DataSizeException(String.format("Размер данных %s превышает размер буфера %s", data.length, BUFFER_SIZE));
+    public void append(byte[] data, int length) {
+        if (length > BUFFER_SIZE) {
+            throw new DataSizeException(String.format("Размер данных %s превышает размер буфера %s", length, BUFFER_SIZE));
         }
-        appendData(data);
+        appendData(data, length);
         Optional<String> string = getStringFromData();
         string.map(strResult::append);
     }
