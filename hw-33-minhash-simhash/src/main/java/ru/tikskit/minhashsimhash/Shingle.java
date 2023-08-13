@@ -16,4 +16,12 @@ public record Shingle (String[] words){
                 "words=" + Arrays.toString(words) +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Shingle shingle = (Shingle) o;
+        return Arrays.equals(words, shingle.words);
+    }
 }

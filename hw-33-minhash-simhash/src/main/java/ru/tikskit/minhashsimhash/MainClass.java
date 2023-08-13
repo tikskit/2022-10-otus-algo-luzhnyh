@@ -1,5 +1,6 @@
 package ru.tikskit.minhashsimhash;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 public class MainClass {
@@ -14,13 +15,21 @@ public class MainClass {
             return count;
         }
     }
+
+    private static DocShingles createDocShingles(String fileName, Charset charset) throws IOException {
+        DocShingles doc = new DocShingles(fileName);
+        FileShinglerSync fss = new FileShinglerSync(fileName, doc.getShingles()::addAll, charset);
+        fss.read();
+        return doc;
+    }
     public static void main(String[] args) throws Exception {
+
         Charset windows1252 = Charset.forName("windows-1251");
         ShinglesCounter counter = new ShinglesCounter();
-        FileShinglerSync fss = new FileShinglerSync("G:/Temp/file1.txt", s -> counter.inc(s.size()), windows1252);
-        long start = System.currentTimeMillis();
-        fss.read();
-        System.out.println(System.currentTimeMillis() - start);
-        System.out.println(counter.getCount());
+
+        DocShingles doc1 = createDocShingles("G:/Temp/file1.txt", windows1252);
+        DocShingles doc2 = createDocShingles("G:/Temp/file2.txt", windows1252);
+
+
     }
 }
